@@ -7,14 +7,20 @@ import ContactSection from "../Components/ContactSection";
 
 function Home() {
   return (
-    <>
+    <div className="bg-white dark:bg-gray-900 transition-colors duration-300">
       <Hero />
       <About />
-      <WhyChooseUs />
+
+<div className="h-32"></div>
+
+<WhyChooseUs />
       <ProductSection />
-      <AIGenerator />
+
+<div className="h-32"></div>
+
+<AIGenerator />
       <ContactSection />
-    </>
+    </div>
   );
 }
 
