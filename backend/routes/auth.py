@@ -1,5 +1,8 @@
-from fastapi import APIRouter, HTTPException
-from data.users import users
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
+
+from database import get_db
+from models.user_db import UserDB
 from models.user import UserSignup, UserLogin
 
 router = APIRouter(
@@ -10,26 +13,29 @@ router = APIRouter(
 
 # SIGNUP
 @router.post("/signup", status_code=201)
-def signup(user: UserSignup):
+def signup(
+    user: UserSignup,
+    db: Session = Depends(get_db)
+):
 
-    # Check if username already exists
-    for existing_user in users:
-        if existing_user["username"] == user.username:
-            raise HTTPException(
-                status_code=400,
-                detail="Username already exists"
-            )
+    existing_user = db.query(UserDB).filter(
+        UserDB.username == user.username
+    ).first()
 
-    # Generate new ID automatically
-    new_id = len(users) + 1
+    if existing_user:
+        raise HTTPException(
+            status_code=400,
+            detail="Username already exists"
+        )
 
-    new_user = {
-        "id": new_id,
-        "username": user.username,
-        "password": user.password
-    }
+    new_user = UserDB(
+        username=user.username,
+        password=user.password
+    )
 
-    users.append(new_user)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
 
     return {
         "message": "User registered successfully",
@@ -39,19 +45,21 @@ def signup(user: UserSignup):
 
 # LOGIN
 @router.post("/login")
-def login(user: UserLogin):
+def login(
+    user: UserLogin,
+    db: Session = Depends(get_db)
+):
 
-    for existing_user in users:
+    existing_user = db.query(UserDB).filter(
+        UserDB.username == user.username,
+        UserDB.password == user.password
+    ).first()
 
-        if (
-            existing_user["username"] == user.username
-            and existing_user["password"] == user.password
-        ):
-
-            return {
-                "message": "Login successful",
-                "user": existing_user
-            }
+    if existing_user:
+        return {
+            "message": "Login successful",
+            "user": existing_user
+        }
 
     raise HTTPException(
         status_code=401,
