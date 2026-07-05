@@ -1,10 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from database import engine, Base
+from models.product_db import ProductDB
+from models.user_db import UserDB
+
 from routes.products import router as product_router
 from routes.auth import router as auth_router
 
 app = FastAPI(title="HimShakti Backend API")
+Base.metadata.create_all(bind=engine)
 
 # CORS Configuration
 app.add_middleware(
