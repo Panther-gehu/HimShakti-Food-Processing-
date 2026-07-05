@@ -1,5 +1,8 @@
-from fastapi import APIRouter, HTTPException, Query
-from data.products import products
+from fastapi import APIRouter, HTTPException, Query, Depends
+from sqlalchemy.orm import Session
+
+from database import get_db
+from models.product_db import ProductDB
 from models.product import Product
 
 router = APIRouter(
@@ -10,100 +13,126 @@ router = APIRouter(
 
 # SEARCH PRODUCTS
 @router.get("/search")
-def search_products(name: str = Query(None)):
-    if name is None:
-        return products
+def search_products(
+    name: str = Query(None),
+    db: Session = Depends(get_db)
+):
+    if not name:
+        return db.query(ProductDB).all()
 
-    result = []
+    products = db.query(ProductDB).filter(
+        ProductDB.name.ilike(f"%{name}%")
+    ).all()
 
-    for product in products:
-        if name.lower() in product["name"].lower():
-            result.append(product)
-
-    return result
+    return products
 
 
 # GET ALL PRODUCTS
 @router.get("/")
-def get_products():
-    return products
+def get_products(db: Session = Depends(get_db)):
+    return db.query(ProductDB).all()
 
 
 # GET PRODUCT BY ID
 @router.get("/{product_id}")
-def get_product(product_id: int):
+def get_product(
+    product_id: int,
+    db: Session = Depends(get_db)
+):
+    product = db.query(ProductDB).filter(
+        ProductDB.id == product_id
+    ).first()
 
-    for product in products:
-        if product["id"] == product_id:
-            return product
+    if product is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found"
+        )
 
-    raise HTTPException(
-        status_code=404,
-        detail="Product not found"
-    )
+    return product
+
+
 
 
 # ADD PRODUCT
 @router.post("/", status_code=201)
-def add_product(product: Product):
+def add_product(product: Product, db: Session = Depends(get_db)):
 
-    # Check duplicate ID
-    for p in products:
-        if p["id"] == product.id:
-            raise HTTPException(
-                status_code=400,
-                detail="Product ID already exists"
-            )
+    existing = db.query(ProductDB).filter(ProductDB.id == product.id).first()
 
-    products.append(product.model_dump())
+    if existing:
+        raise HTTPException(
+            status_code=400,
+            detail="Product ID already exists"
+        )
+
+    new_product = ProductDB(
+        id=product.id,
+        name=product.name,
+        price=product.price,
+        category=product.category,
+        description=product.description,
+    )
+
+    db.add(new_product)
+    db.commit()
+    db.refresh(new_product)
 
     return {
         "message": "Product added successfully",
+        "product": new_product
+    }
+
+# UPDATE PRODUCT
+@router.put("/{product_id}")
+def update_product(
+    product_id: int,
+    updated_product: Product,
+    db: Session = Depends(get_db)
+):
+    product = db.query(ProductDB).filter(
+        ProductDB.id == product_id
+    ).first()
+
+    if product is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found"
+        )
+
+    product.name = updated_product.name
+    product.price = updated_product.price
+    product.category = updated_product.category
+    product.description = updated_product.description
+
+    db.commit()
+    db.refresh(product)
+
+    return {
+        "message": "Product updated successfully",
         "product": product
     }
 
 
-# UPDATE PRODUCT
-@router.put("/{product_id}")
-def update_product(product_id: int, updated_product: Product):
-
-    for product in products:
-
-        if product["id"] == product_id:
-
-            product["id"] = updated_product.id
-            product["name"] = updated_product.name
-            product["price"] = updated_product.price
-            product["category"] = updated_product.category
-            product["description"] = updated_product.description
-
-            return {
-                "message": "Product updated successfully",
-                "product": product
-            }
-
-    raise HTTPException(
-        status_code=404,
-        detail="Product not found"
-    )
-
-
 # DELETE PRODUCT
 @router.delete("/{product_id}")
-def delete_product(product_id: int):
+def delete_product(
+    product_id: int,
+    db: Session = Depends(get_db)
+):
+    product = db.query(ProductDB).filter(
+        ProductDB.id == product_id
+    ).first()
 
-    for index, product in enumerate(products):
+    if product is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found"
+        )
 
-        if product["id"] == product_id:
+    db.delete(product)
+    db.commit()
 
-            deleted_product = products.pop(index)
-
-            return {
-                "message": "Product deleted successfully",
-                "product": deleted_product
-            }
-
-    raise HTTPException(
-        status_code=404,
-        detail="Product not found"
-    )
+    return {
+        "message": "Product deleted successfully"
+    }
