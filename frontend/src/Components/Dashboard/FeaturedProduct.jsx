@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Eye, ShoppingCart } from "lucide-react";
-import { getProducts } from "../../api/productApi";
+
+import { getProducts, searchProducts } from "../../api/productApi";
+import { createOrder } from "../../api/orderApi";
 
 // Local Images
 import mandua from "../../assets/image/mandua.jpg";
@@ -10,13 +13,19 @@ import rajma from "../../assets/image/rajma.jpg";
 import jhangora from "../../assets/image/jhangora.jpg";
 import amla from "../../assets/image/amla.jpg";
 
-function FeaturedProducts() {
+function FeaturedProducts({ search }) {
 
   const [products, setProducts] = useState([]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
+  if (search.trim() === "") {
     loadProducts();
-  }, []);
+  } else {
+    handleSearch();
+  }
+}, [search]);
 
   const loadProducts = async () => {
   try {
@@ -28,6 +37,33 @@ function FeaturedProducts() {
     setProducts(data);
   } catch (error) {
     console.log(error);
+  }
+};
+
+const handleSearch = async () => {
+  try {
+    const data = await searchProducts(search);
+    setProducts(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const handleBuyNow = async (product) => {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user) {
+      alert("Please login first.");
+      return;
+    }
+
+    await createOrder(user.id, product.id, 1);
+
+    alert("Order placed successfully!");
+  } catch (error) {
+    console.error(error);
+    alert("Failed to place order.");
   }
 };
 
@@ -59,24 +95,21 @@ function FeaturedProducts() {
   return (
     <section className="pt-8 w-full">
 
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-5 mb-8">
 
-        <div>
-          <h2 className="text-3xl font-bold text-gray-800">
-            Featured Products
-          </h2>
+  <div>
+    <h2 className="text-3xl font-bold text-gray-800">
+      Featured Products
+    </h2>
 
-          <p className="text-gray-500 mt-2">
-            Products loaded from backend
-          </p>
+    <p className="text-gray-500 mt-2">
+      Products loaded from backend
+    </p>
+  </div>
 
-        </div>
+  
 
-        <button className="text-green-600 font-semibold">
-          View All →
-        </button>
-
-      </div>
+</div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
 
@@ -113,17 +146,21 @@ function FeaturedProducts() {
 
               <div className="flex gap-3 mt-6">
 
-                <button className="flex-1 bg-green-600 text-white rounded-xl py-3 flex items-center justify-center gap-2">
-
+                <button onClick={() => handleBuyNow(product)}
+                  className="flex-1 bg-green-600 text-white rounded-xl py-3 flex items-center justify-center gap-2"
+                >
                   <ShoppingCart size={18} />
 
                   Buy Now
 
                 </button>
 
-                <button className="w-12 h-12 border rounded-xl flex items-center justify-center">
+                <button
+  onClick={() => navigate(`/product/${product.id}`)}
+  className="w-12 h-12 border rounded-xl flex items-center justify-center hover:bg-green-600 hover:text-white transition"
+>
 
-                  <Eye size={20} />
+                   <Eye size={20} />
 
                 </button>
 

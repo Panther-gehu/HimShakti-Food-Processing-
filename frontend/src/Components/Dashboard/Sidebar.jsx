@@ -1,7 +1,8 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   ShoppingBag,
+  ShoppingCart,
   User,
   Package,
   Heart,
@@ -13,6 +14,7 @@ import {
 
 function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const menus = [
     {
@@ -21,14 +23,19 @@ function Sidebar() {
       icon: <LayoutDashboard size={20} />,
     },
     {
-      name: "Products",
-      path: "/products",
+      name: "Manage Products",
+      path: "/manage-products",
       icon: <ShoppingBag size={20} />,
     },
     {
       name: "My Orders",
       path: "/orders",
       icon: <Package size={20} />,
+    },
+    {
+      name: "Cart",
+      path: "/cart",
+      icon: <ShoppingCart size={20} />,
     },
     {
       name: "Profile",
@@ -51,6 +58,13 @@ function Sidebar() {
       icon: <Settings size={20} />,
     },
   ];
+  const handleLogout = () => {
+  localStorage.removeItem("user");
+
+  alert("Logged out successfully");
+
+  navigate("/login");
+};
 
   return (
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen flex flex-col shadow-sm">
@@ -112,16 +126,12 @@ function Sidebar() {
 
       <div className="p-4 border-t">
 
-        <Link
-          to="/"
-          className="flex items-center justify-center gap-3 bg-red-500 hover:bg-red-600 text-white rounded-xl py-3 transition"
-        >
-
-          <LogOut size={20} />
-
-          Logout
-
-        </Link>
+        <button  onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-3 bg-red-500 hover:bg-red-600 text-white rounded-xl py-3 transition"
+          >
+           <LogOut size={20} />
+              Logout
+        </button>
 
       </div>
 

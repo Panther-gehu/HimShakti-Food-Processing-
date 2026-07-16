@@ -14,6 +14,10 @@ import DashboardPage from "./pages/DashboardPage";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import ManageProductsPage from "./pages/ManageProductsPage";
 import ProtectedRoute from "./Components/ProtectedRoute";
+import CartPage from "./pages/CartPage";
+import OrdersPage from "./pages/OrdersPage";
+
+import OAuthSuccess from "./pages/OAuthSuccess";
 
 import "./App.css";
 
@@ -122,10 +126,30 @@ function App() {
             <ManageProductsPage />
             </ProtectedRoute>
           }
+
+          
+          
+/>
+      <Route path="/cart" 
+      element={<CartPage />} />
+
+      <Route
+  path="/orders"
+  element={
+    <ProtectedRoute>
+      <OrdersPage />
+    </ProtectedRoute>
+  }
+/>
+
+<Route
+  path="/oauth-success"
+  element={<OAuthSuccess />}
 />
 
       </Routes>
     </BrowserRouter>
+
 
     
 

@@ -4,7 +4,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-function Topbar() {
+function Topbar({ search, setSearch }) {
   return (
     <header className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-10">
 
@@ -19,8 +19,10 @@ function Topbar() {
   <input
     type="text"
     placeholder="Search products..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
     className="ml-3 flex-1 bg-transparent outline-none border-none text-gray-700 placeholder-gray-400"
-  />
+/>
 
 </div>
       {/* Right Side */}

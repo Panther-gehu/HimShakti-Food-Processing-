@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../api/authApi";
@@ -5,40 +6,74 @@ import { loginUser } from "../api/authApi";
 function LoginPage() {
   const navigate = useNavigate();
 
+  
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  
 
-    setLoading(true);
-    setError("");
 
-    try {
-      const data = await loginUser(username, password);
+  // ===========================================
+// LOGIN USER
+// ===========================================
+const handleLogin = async (e) => {
+  e.preventDefault();
 
-      console.log(data);
+  setLoading(true);
+  setError("");
 
-      localStorage.setItem("user", JSON.stringify(data.user));
+  try {
 
-      alert(data.message);
+    const data = await loginUser(username, password);
 
-      navigate("/dashboard");
-    } catch (err) {
-      console.error(err);
+    console.log(data);
 
-      if (err.response) {
-        setError(err.response.data.detail || "Invalid Username or Password");
-      } else {
-        setError("Unable to connect to server.");
-      }
+    // ===============================
+    // Save JWT Token
+    // ===============================
+    localStorage.setItem(
+      "token",
+      data.access_token
+    );
+
+    // ===============================
+    // Save Logged In User
+    // ===============================
+    localStorage.setItem(
+      "user",
+      JSON.stringify(data.user)
+    );
+
+    alert(data.message);
+
+    navigate("/dashboard");
+
+  } catch (err) {
+
+    console.error(err);
+
+    if (err.response) {
+      setError(
+        err.response.data.detail ||
+        "Invalid Username or Password"
+      );
+    } else {
+      setError("Unable to connect to server.");
     }
 
-    setLoading(false);
-  };
+  }
+
+  setLoading(false);
+};
+
+const handleGoogleLogin = () => {
+  window.location.href =
+    "http://localhost:8000/api/auth/google/login";
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 px-6 py-12">
@@ -67,45 +102,56 @@ function LoginPage() {
 
             <form onSubmit={handleLogin} className="space-y-6">
 
-              <div>
-                <label className="block mb-2 font-medium">
-                  Username
-                </label>
+  <div>
+    <label className="block mb-2 font-medium">
+      Username
+    </label>
 
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter Username"
-                  className="w-full h-14 px-4 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600"
-                  required
-                />
-              </div>
+    <input
+      type="text"
+      value={username}
+      onChange={(e) => setUsername(e.target.value)}
+      placeholder="Enter Username"
+      className="w-full h-14 px-4 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600"
+      required
+    />
+  </div>
 
-              <div>
-                <label className="block mb-2 font-medium">
-                  Password
-                </label>
+  <div>
+    <label className="block mb-2 font-medium">
+      Password
+    </label>
 
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter Password"
-                  className="w-full h-14 px-4 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600"
-                  required
-                />
-              </div>
+    <input
+      type="password"
+      value={password}
+      onChange={(e) => setPassword(e.target.value)}
+      placeholder="Enter Password"
+      className="w-full h-14 px-4 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-600"
+      required
+    />
+  </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-green-700 hover:bg-green-800 text-white py-4 rounded-xl font-semibold text-lg"
-              >
-                {loading ? "Logging In..." : "LOGIN"}
-              </button>
+  {/* Existing Login Button */}
+  <button
+    type="submit"
+    disabled={loading}
+    className="w-full bg-green-700 hover:bg-green-800 text-white py-4 rounded-xl font-semibold text-lg"
+  >
+    {loading ? "Logging In..." : "LOGIN"}
+  </button>
 
-            </form>
+  <button
+  type="button"
+  onClick={handleGoogleLogin}
+  className="w-full mt-4 border-2 border-gray-300 py-4 rounded-xl font-semibold hover:bg-gray-100"
+>
+  Continue with Google
+</button>
+
+  
+
+</form>
 
           </div>
 

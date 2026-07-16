@@ -29,43 +29,61 @@ function Navbar() {
 
           <ul className="flex flex-wrap justify-center gap-4 md:gap-8 text-sm md:text-lg font-medium">
 
-            <li>
-              <Link
-                to="/"
-                className="hover:text-green-200 transition"
-              >
-                Home
-              </Link>
-            </li>
+  <li>
+    <Link
+      to="/"
+      className="hover:text-green-200 transition"
+    >
+      Home
+    </Link>
+  </li>
 
-            <li>
-              <Link
-                to="/about"
-                className="hover:text-green-200 transition"
-              >
-                About
-              </Link>
-            </li>
+  <li>
+    <Link
+      to="/about"
+      className="hover:text-green-200 transition"
+    >
+      About
+    </Link>
+  </li>
 
-            <li>
-              <Link
-                to="/products"
-                className="hover:text-green-200 transition"
-              >
-                Products
-              </Link>
-            </li>
+  <li>
+    <Link
+      to="/products"
+      className="hover:text-green-200 transition"
+    >
+      Products
+    </Link>
+  </li>
 
-            <li>
-              <Link
-                to="/contact"
-                className="hover:text-green-200 transition"
-              >
-                Contact
-              </Link>
-            </li>
+  <li>
+    <Link
+      to="/contact"
+      className="hover:text-green-200 transition"
+    >
+      Contact
+    </Link>
+  </li>
 
-          </ul>
+  <li>
+    <Link
+      to="/login"
+      className="hover:text-green-200 transition"
+    >
+      Login
+    </Link>
+  </li>
+
+  <li>
+    <Link
+      to="/signup"
+      className="hover:text-green-200 transition"
+    >
+      Sign Up
+    </Link>
+  </li>
+
+</ul>
 
           <button
   onClick={() => setDarkMode((prev) => !prev)}
