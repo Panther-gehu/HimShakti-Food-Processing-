@@ -19,6 +19,7 @@ from slowapi.middleware import SlowAPIMiddleware
 
 from routes.google_auth import router as google_router
 from starlette.middleware.sessions import SessionMiddleware
+from routes.dashboard import router as dashboard_router
 
 # ==========================================
 # Load Environment Variables
@@ -90,3 +91,4 @@ app.include_router(orders_router)
 app.include_router(cart_router)
 app.include_router(google_router)
 app.include_router(ai_router)
+app.include_router(dashboard_router)
