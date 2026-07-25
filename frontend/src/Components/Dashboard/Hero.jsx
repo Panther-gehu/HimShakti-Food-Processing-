@@ -1,7 +1,18 @@
+import { useEffect, useState } from "react";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 import { Link } from "react-router-dom";
-
 function Hero() {
+
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (user) {
+      setUsername(user.username);
+    }
+  }, []);
+
   return (
     <section
 className="relative min-h-[420px] rounded-3xl overflow-hidden shadow-xl"
@@ -26,7 +37,7 @@ className="relative min-h-[420px] rounded-3xl overflow-hidden shadow-xl"
             <br />
 
             <span className="text-green-300">
-              Pranav 👋
+              {username ? `${username} 👋` : "Guest 👋"}
             </span>
 
           </h1>
