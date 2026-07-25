@@ -1,10 +1,19 @@
+import { useEffect, useState } from "react";
 import {
   Bell,
   Search,
   ChevronDown,
 } from "lucide-react";
-
 function Topbar({ search, setSearch }) {
+  const [user, setUser] = useState(null);
+
+useEffect(() => {
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+
+  if (storedUser) {
+    setUser(storedUser);
+  }
+}, []);
   return (
     <header className="h-20 bg-white border-b border-gray-200 flex items-center justify-between px-10">
 
@@ -47,14 +56,15 @@ function Topbar({ search, setSearch }) {
 
           {/* Profile Circle */}
           <div className="w-11 h-11 rounded-full bg-green-600 flex items-center justify-center text-white font-bold text-lg">
-            PB
-          </div>
-
+  {user?.username
+    ? user.username.slice(0, 2).toUpperCase()
+    : "GU"}
+</div>
           <div>
 
             <h4 className="font-semibold text-gray-800">
-              Pranav Bisht
-            </h4>
+  {user?.username || "Guest"}
+</h4>
 
             <p className="text-sm text-gray-500">
               Customer
