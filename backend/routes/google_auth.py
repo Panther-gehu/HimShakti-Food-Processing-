@@ -77,7 +77,7 @@ async def google_callback(
     )
 
     frontend_url = (
-    "http://localhost:5173/oauth-success"
+    "https://him-shakti-food-processing-sandy.vercel.app/oauth-success"
     f"?token={access_token}"
     f"&id={user.id}"
     f"&username={user.username}"
