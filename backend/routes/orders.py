@@ -75,8 +75,13 @@ def get_orders(
     token: dict = Depends(verify_token)
 ):
 
-    # Fetch all orders
-    orders = db.query(OrderDB).all()
+    # Get logged-in user's ID from JWT
+    user_id = token.get("user_id")
+
+# Fetch only this user's orders
+    orders = db.query(OrderDB).filter(
+    OrderDB.user_id == user_id
+).all()
 
     result = []
 
