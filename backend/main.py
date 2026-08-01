@@ -31,7 +31,9 @@ app = FastAPI(title="HimShakti Backend API")
 
 app.add_middleware(
     SessionMiddleware,
-    secret_key=os.getenv("JWT_SECRET")
+    secret_key=os.getenv("JWT_SECRET"),
+    same_site="lax",
+    https_only=True,
 )
 
 # ==========================================
