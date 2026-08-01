@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../api/authApi";
 
+
 function LoginPage() {
   const navigate = useNavigate();
 
@@ -72,7 +73,7 @@ const handleLogin = async (e) => {
 
 const handleGoogleLogin = () => {
   window.location.href =
-    "http://localhost:8000/api/auth/google/login";
+    "https://himshakti-food-processing.onrender.com/api/auth/google/login";
 };
 
   return (
