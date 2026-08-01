@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://himshakti-food-processing.onrender.com";
 
 export const generateProductDescription = async (data) => {
   const response = await fetch(
@@ -11,6 +11,10 @@ export const generateProductDescription = async (data) => {
       body: JSON.stringify(data),
     }
   );
+
+  if (!response.ok) {
+    throw new Error("Failed to generate AI description");
+  }
 
   return await response.json();
 };
