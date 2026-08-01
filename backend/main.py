@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-
 import os
 from dotenv import load_dotenv
 
@@ -12,7 +11,6 @@ from routes.auth import router as auth_router
 from routes.orders import router as orders_router
 from routes.cart import router as cart_router
 from routes.ai import router as ai_router
-
 
 from limiter import limiter
 from slowapi.middleware import SlowAPIMiddleware
@@ -42,28 +40,13 @@ app.add_middleware(
 app.state.limiter = limiter
 app.add_middleware(SlowAPIMiddleware)
 
-
-
 # ==========================================
 # CORS Configuration
 # ==========================================
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:5175",
-        "http://localhost:5176",
-        "http://localhost:5177",
-        "http://localhost:5178",
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5174",
-        "http://127.0.0.1:5175",
-        "http://127.0.0.1:5176",
-        "http://127.0.0.1:5177",
-        "http://127.0.0.1:5178",
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],          # Temporary for deployment
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
