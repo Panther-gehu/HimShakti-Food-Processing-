@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://127.0.0.1:8000/api/cart";
+const BASE_URL = "https://himshakti-food-processing.onrender.com/api/cart";
 
 // Add to Cart
 export const addToCart = async (user_id, product_id, quantity) => {
