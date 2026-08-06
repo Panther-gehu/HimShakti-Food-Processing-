@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends, Request
 from sqlalchemy.orm import Session
 
+print("========== UPDATED AUTH.PY LOADED ==========")
+
 from database import get_db
 from models.user_db import UserDB
 from models.user import UserSignup, UserLogin
@@ -42,9 +44,10 @@ def signup(
     hashed_password = hash_password(user.password)
 
     new_user = UserDB(
-        username=user.username,
-        password=hashed_password
-    )
+    username=user.username,
+    password=hashed_password,
+    role="user"
+)
 
     db.add(new_user)
     db.commit()
@@ -54,7 +57,8 @@ def signup(
         "message": "User registered successfully",
         "user": {
             "id": new_user.id,
-            "username": new_user.username
+            "username": new_user.username,
+            "role": new_user.role
         }
     }
 
@@ -90,11 +94,16 @@ def login(
         )
 
     access_token = create_access_token(
-    data={
-        "sub": existing_user.username,
-        "user_id": existing_user.id
-    }
-)
+        data={
+            "sub": existing_user.username,
+            "user_id": existing_user.id,
+            "role": existing_user.role
+        }
+    )
+    
+    print("ROLE FROM DB:", existing_user.role)
+    print(existing_user.__dict__)
+
 
     return {
         "message": "Login successful",
@@ -102,6 +111,7 @@ def login(
         "token_type": "bearer",
         "user": {
             "id": existing_user.id,
-            "username": existing_user.username
+            "username": existing_user.username,
+            "role": existing_user.role
         }
     }
