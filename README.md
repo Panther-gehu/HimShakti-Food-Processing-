@@ -83,7 +83,6 @@ The project currently contains two tables:
 | category | String |
 | description | String |
 
-> **Schema Diagram:** *(Add the database schema image here after creating it.)*
 
 ---
 
