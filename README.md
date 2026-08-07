@@ -237,7 +237,13 @@ GEMINI_API_KEY=your_gemini_api_key
 
 ## Contributors
 
-Developed as part of the SIP 2026 Internship Program for HimShakti Food Processing Unit.
+**Pranav Bisht**
+
+AI-Assisted Full Stack Intern
+
+SIP 2026 Internship Program
+
+Graphic Era University
 
 ---
 
