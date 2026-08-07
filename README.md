@@ -8,6 +8,32 @@ The solution helps customers discover products, connect directly through WhatsAp
 
 ---
 
+# Project Screenshots
+
+## Home Page
+
+![Home Page](screenshots/home.png)
+
+---
+
+## User Dashboard
+
+![User Dashboard](screenshots/dashboard.png)
+
+---
+
+## AI Product Description Generator
+
+![AI Product Description Generator](screenshots/ai-generator.png)
+
+---
+
+## Login Page
+
+![Login Page](screenshots/login.png)
+
+---
+
 ## Features
 
 - User Signup & Login Authentication
@@ -113,41 +139,62 @@ HimShakti-Food-Processing/
 
 1. Clone the repository.
 
-```
-git clone <repository-url>
+```bash
+git clone https://github.com/Panther-gehu/HimShakti-Food-Processing.git
 ```
 
 2. Navigate to the backend folder.
 
-```
+```bash
 cd backend
 ```
 
 3. Create a `.env` file.
 
-```
+```env
 DATABASE_URL=your_postgresql_connection_string
 ```
 
 4. Install dependencies.
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
 5. Run the FastAPI server.
 
-```
+```bash
 uvicorn main:app --reload
 ```
 
 6. Run the frontend.
 
-```
+```bash
 cd frontend
 npm install
 npm run dev
 ```
+
+---
+
+## Environment Variables
+
+Create a `.env` file inside the **backend** folder and add the following variables:
+
+```env
+DATABASE_URL=your_postgresql_connection_string
+JWT_SECRET=your_jwt_secret
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_REDIRECT_URI=your_google_redirect_uri
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+> **Note:** Never commit your actual `.env` file to GitHub. Store sensitive credentials securely and use environment variables in deployment platforms such as Render or Vercel.
+
+---
+
+## API Endpoints
 
 ---
 
