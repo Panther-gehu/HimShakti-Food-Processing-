@@ -240,7 +240,7 @@ GEMINI_API_KEY=your_gemini_api_key
 **Pranav Bisht**
 
 AI-Assisted Full Stack Intern
-
+TBI-GEU
 SIP 2026 Internship Program
 
 Graphic Era University
